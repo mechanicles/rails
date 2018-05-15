@@ -621,6 +621,34 @@ class BelongsToAssociationsTest < ActiveRecord::TestCase
     assert_queries(3) { line_item.touch }
   end
 
+  def test_belongs_to_with_touch_option_on_touch_should_call_after_touch_callback
+    invoice = Invoice.create!
+    assert_equal 0, invoice.after_touch_count
+
+    line_item = LineItem.create!(invoice: invoice)
+    assert_equal 1, invoice.reload.after_touch_count
+
+    line_item.touch
+    assert_equal 2, invoice.reload.after_touch_count
+  end
+
+  def test_belongs_to_with_touch_option_and_with_counter_cache_option
+    invoice = Invoice.create!
+    assert_equal 0, invoice.after_touch_count
+    assert_equal 0, invoice.line_items_count
+
+    line_item = LineItem.create!(invoice: invoice)
+
+    invoice = invoice.reload
+
+    assert_equal 1, invoice.after_touch_count
+
+    line_item.touch
+    assert_equal 2, invoice.after_touch_count
+
+    assert_equal 1, invoice.line_items_count
+  end
+
   def test_belongs_to_counter_after_update
     topic = Topic.create!(title: "37s")
     topic.replies.create!(title: "re: 37s", content: "rails")

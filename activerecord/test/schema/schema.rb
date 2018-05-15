@@ -396,6 +396,8 @@ ActiveRecord::Schema.define do
 
   create_table :invoices, force: true do |t|
     t.integer :balance
+    t.integer :after_touch_count, default: 0
+    t.integer :line_items_count, default: 0
     if subsecond_precision_supported?
       t.datetime :updated_at, precision: 6
     else
