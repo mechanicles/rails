@@ -636,15 +636,18 @@ class BelongsToAssociationsTest < ActiveRecord::TestCase
     invoice = Invoice.create!
     assert_equal 0, invoice.after_touch_count
     assert_equal 0, invoice.line_items_count
+    assert_equal 0, invoice.lock_version
 
     line_item = LineItem.create!(invoice: invoice)
 
     invoice = invoice.reload
 
     assert_equal 1, invoice.after_touch_count
+    assert_equal 1, invoice.lock_version
 
     line_item.touch
     assert_equal 2, invoice.after_touch_count
+    assert_equal 1, invoice.lock_version
 
     assert_equal 1, invoice.line_items_count
   end
