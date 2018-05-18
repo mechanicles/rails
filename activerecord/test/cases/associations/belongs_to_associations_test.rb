@@ -540,7 +540,7 @@ class BelongsToAssociationsTest < ActiveRecord::TestCase
     line_item = LineItem.create!
     Invoice.create!(line_items: [line_item])
 
-    assert_queries(1) { line_item.touch }
+    assert_queries(2) { line_item.touch }
   end
 
   def test_belongs_to_with_touch_on_multiple_records
@@ -548,14 +548,14 @@ class BelongsToAssociationsTest < ActiveRecord::TestCase
     line_item2 = LineItem.create!(amount: 2)
     Invoice.create!(line_items: [line_item, line_item2])
 
-    assert_queries(1) do
+    assert_queries(2) do
       LineItem.transaction do
         line_item.touch
         line_item2.touch
       end
     end
 
-    assert_queries(2) do
+    assert_queries(4) do
       line_item.touch
       line_item2.touch
     end
@@ -580,14 +580,14 @@ class BelongsToAssociationsTest < ActiveRecord::TestCase
 
     line_item.invoice = nil
 
-    assert_queries(2) { line_item.touch }
+    assert_queries(3) { line_item.touch }
   end
 
   def test_belongs_to_with_touch_option_on_update
     line_item = LineItem.create!
     Invoice.create!(line_items: [line_item])
 
-    assert_queries(2) { line_item.update amount: 10 }
+    assert_queries(3) { line_item.update amount: 10 }
   end
 
   def test_belongs_to_with_touch_option_on_empty_update
@@ -601,7 +601,7 @@ class BelongsToAssociationsTest < ActiveRecord::TestCase
     line_item = LineItem.create!
     Invoice.create!(line_items: [line_item])
 
-    assert_queries(2) { line_item.destroy }
+    assert_queries(4) { line_item.destroy }
   end
 
   def test_belongs_to_with_touch_option_on_destroy_with_destroyed_parent
@@ -609,7 +609,7 @@ class BelongsToAssociationsTest < ActiveRecord::TestCase
     invoice   = Invoice.create!(line_items: [line_item])
     invoice.destroy
 
-    assert_queries(1) { line_item.destroy }
+    assert_queries(2) { line_item.destroy }
   end
 
   def test_belongs_to_with_touch_option_on_touch_and_reassigned_parent
@@ -618,7 +618,7 @@ class BelongsToAssociationsTest < ActiveRecord::TestCase
 
     line_item.invoice = Invoice.create!
 
-    assert_queries(3) { line_item.touch }
+    assert_queries(5) { line_item.touch }
   end
 
   def test_belongs_to_with_touch_option_on_touch_should_call_after_touch_callback
