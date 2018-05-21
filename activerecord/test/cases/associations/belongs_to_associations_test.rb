@@ -609,7 +609,7 @@ class BelongsToAssociationsTest < ActiveRecord::TestCase
     invoice   = Invoice.create!(line_items: [line_item])
     invoice.destroy
 
-    assert_queries(2) { line_item.destroy }
+    assert_queries(1) { line_item.destroy }
   end
 
   def test_belongs_to_with_touch_option_on_touch_and_reassigned_parent
@@ -644,11 +644,11 @@ class BelongsToAssociationsTest < ActiveRecord::TestCase
 
     assert_equal 1, invoice.after_touch_count
     assert_equal 1, invoice.lock_version
+    assert_equal 1, invoice.line_items_count
 
     line_item.touch
     assert_equal 2, invoice.after_touch_count
     assert_equal 1, invoice.lock_version
-
     assert_equal 1, invoice.line_items_count
   end
 

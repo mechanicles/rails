@@ -193,6 +193,7 @@ module ActiveRecord
 
         if affected_rows > 0
           each_counter_cached_associations do |association|
+            next if association.target && association.target.destroyed?
             foreign_key = association.reflection.foreign_key.to_sym
             unless destroyed_by_association && destroyed_by_association.foreign_key.to_sym == foreign_key
               if send(association.reflection.name)

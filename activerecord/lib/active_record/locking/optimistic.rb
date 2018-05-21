@@ -116,7 +116,7 @@ module ActiveRecord
             locking_column => read_attribute_before_type_cast(locking_column)
           )
 
-          if affected_rows != 1
+          if affected_rows > 1
             raise ActiveRecord::StaleObjectError.new(self, "destroy")
           end
 
