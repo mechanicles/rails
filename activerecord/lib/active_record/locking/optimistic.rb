@@ -78,7 +78,7 @@ module ActiveRecord
         end
 
         def _update_row(attribute_names, attempted_action = "update")
-          return super unless locking_enabled? && attempted_action != "touch"
+          return super unless locking_enabled?
 
           begin
             locking_column = self.class.locking_column
