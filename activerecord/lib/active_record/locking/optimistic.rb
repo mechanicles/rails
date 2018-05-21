@@ -153,6 +153,7 @@ module ActiveRecord
           # Make sure the lock version column gets updated when counters are
           # updated.
           def update_counters(id, counters)
+            byebug
             counters = counters.merge(locking_column => 1) if locking_enabled?
             super
           end
