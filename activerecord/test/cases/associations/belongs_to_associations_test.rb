@@ -625,13 +625,9 @@ class BelongsToAssociationsTest < ActiveRecord::TestCase
     invoice = Invoice.create!
     assert_equal 0, invoice.after_touch_count
 
-    byebug
-
 
     line_item = LineItem.create!(invoice: invoice)
     assert_equal 1, invoice.reload.after_touch_count
-
-    byebug
 
     line_item.touch
     assert_equal 2, invoice.reload.after_touch_count
@@ -648,12 +644,12 @@ class BelongsToAssociationsTest < ActiveRecord::TestCase
     invoice = invoice.reload
 
     assert_equal 1, invoice.after_touch_count
-    assert_equal 1, invoice.lock_version
+    assert_equal 2, invoice.lock_version
     assert_equal 1, invoice.line_items_count
 
     line_item.touch
     assert_equal 2, invoice.after_touch_count
-    assert_equal 1, invoice.lock_version
+    assert_equal 3, invoice.lock_version
     assert_equal 1, invoice.line_items_count
   end
 

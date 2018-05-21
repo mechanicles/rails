@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require "byebug"
 
 module ActiveRecord
   # = Active Record Counter Cache
@@ -113,7 +112,6 @@ module ActiveRecord
           updates << sanitize_sql_for_assignment(touch_updates) unless touch_updates.empty?
         end
 
-        byebug
         unscoped.where(primary_key => id).update_all updates.join(", ")
       end
 
@@ -182,11 +180,7 @@ module ActiveRecord
       def _create_record(*)
         id = super
 
-        byebug
-
         each_counter_cached_associations do |association|
-          byebug
-
           if send(association.reflection.name)
             association.increment_counters.reload
           end
